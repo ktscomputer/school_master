@@ -1,0 +1,122 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="student_division_list">
+            <field name="name">school list</field>
+            <field name="model">student.division</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="student_division_form">
+            <field name="name">Batch</field>
+            <field name="model">student.division</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_save" type="object" string="Save"
+                                class="oe_highlight"
+                                invisible="is_locked"/>
+                        <button name="action_edit" type="object" string="Edit"
+                                invisible="not is_locked"/>
+                        <field name="is_locked" invisible="1"/>
+                    </header>
+                    <sheet>
+                        <div class=" row oe_title">
+                            <div class="col-3 student-master-header">
+                                <img src="/school_master/static/description/batch.png"
+                                     alt="Student Icon" style="width: 100px; height: 100px;"/>
+                            </div>
+                            <div class="col-9 student-master-header">
+                                <h4 style="color: red; text-align: center;">
+                                    <b>BATCH MASTER</b>
+                                </h4>
+                            </div>
+                        </div>
+                        <hr/>
+                        <group>
+                            <field name="name" readonly="is_locked"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="student_batch_action_window">
+            <field name="name">Batch window</field>
+            <field name="res_model">student.division</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <!--        #For Year-->
+
+        <record model="ir.ui.view" id="student_year_list">
+            <field name="name">Year list</field>
+            <field name="model">student.class.no</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="student_year_form">
+            <field name="name">Year Form</field>
+            <field name="model">student.class.no</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_save" type="object" string="Save"
+                                class="oe_highlight"
+                                invisible="is_locked"/>
+                        <button name="action_edit" type="object" string="Edit"
+                                invisible="not is_locked"/>
+                        <field name="is_locked" invisible="1"/>
+                    </header>
+                    <sheet>
+                        <div class=" row oe_title">
+                            <div class="col-3 student-master-header">
+                                <img src="/school_master/static/description/batch.png"
+                                     alt="Student Icon" style="width: 100px; height: 100px;"/>
+                            </div>
+                            <div class="col-9 student-master-header">
+                                <h4 style="color: red; text-align: center;">
+                                    <b>YEAR MASTER</b>
+                                </h4>
+                            </div>
+                        </div>
+                        <hr/>
+                        <group>
+                            <field name="name" readonly="is_locked"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="student_year_action_window">
+            <field name="name">Year window</field>
+            <field name="res_model">student.class.no</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+        <menuitem name="Configuration" id="configuration_menu_list" parent="school_master_root"
+                  sequence="60"/>
+        <menuitem name="Batches" id="batch_menu" parent="configuration_menu_list"
+                  action="student_batch_action_window"
+                  sequence="10"/>
+        <menuitem name="Year" id="year_menu" parent="configuration_menu_list"
+                  action="student_year_action_window"
+                  sequence="20"/>
+
+    </data>
+</odoo>

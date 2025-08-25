@@ -1,0 +1,79 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="teacher_master_list">
+            <field name="name">teacher_master list</field>
+            <field name="model">teacher.master</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="contact_no"/>
+                    <field name="designation_id"/>
+                    <!--                    <field name="display_std"/>-->
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="teacher_master_form">
+            <field name="name">teacher_master form</field>
+            <field name="model">teacher.master</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class=" row oe_title">
+                            <div class="col-3 student-master-header">
+                                <field name="company_logo" widget="image" class="o_logo_company"
+                                   style="max-width: 100%; max-height: 100%;"
+                                   alt="Company Logo" readonly="1"/>
+                            </div>
+                            <div class="col-9 student-master-header">
+                                <img src="/teacher_master/static/description/icon.png"
+                                     alt="Teacher Icon" style="width: 60px; height: 60px;"/>
+                                <h3 style="text-align: center;">
+                                    <b>TEACHER MASTER</b>
+                                </h3>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row" style="margin-top:60px">
+                            <div class="col-6">
+                                <group>
+                                    <field name="name"/>
+                                    <field name="gender"/>
+                                    <field name="doj"/>
+                                    <field name="year_of_service"/>
+                                    <field name="contact_no"/>
+                                </group>
+                            </div>
+                            <div class="col-6">
+                                <group>
+                                    <field name="emergency_contact"/>
+                                    <field name="address"/>
+                                    <field name="designation_id"/>
+                                    <field name="std" widget="many2many_tags"/>
+                                </group>
+                            </div>
+                        </div>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="teacher_master_action_window">
+            <field name="name">TEACHER MASTER</field>
+            <field name="res_model">teacher.master</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+        <menuitem name="Teachers Master" id="teacher_master_menu" parent="school_master_root"
+                  action="teacher_master_action_window"
+                  sequence="20"/>
+
+    </data>
+</odoo>
