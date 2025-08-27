@@ -32,9 +32,9 @@
                                      alt="Student Icon" style="width: 100px; height: 100px;"/>
                             </div>
                             <div class="col-9 student-master-header">
-                                <h4 style="color: red; text-align: center;">
+                                <h2 style="text-align: center;">
                                     <b>BATCH MASTER</b>
-                                </h4>
+                                </h2>
                             </div>
                         </div>
                         <hr/>
@@ -62,7 +62,7 @@
             <field name="model">student.class.no</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="name"/>
+                    <field name="name" string="Batch Year" readonly="is_locked"/>
                 </list>
             </field>
         </record>
@@ -87,14 +87,14 @@
                                      alt="Student Icon" style="width: 100px; height: 100px;"/>
                             </div>
                             <div class="col-9 student-master-header">
-                                <h4 style="color: red; text-align: center;">
+                                <h2 style="text-align: center;">
                                     <b>YEAR MASTER</b>
-                                </h4>
+                                </h2>
                             </div>
                         </div>
                         <hr/>
                         <group>
-                            <field name="name" readonly="is_locked"/>
+                            <field name="name" string="Batch Year" readonly="is_locked"/>
 
                         </group>
                     </sheet>

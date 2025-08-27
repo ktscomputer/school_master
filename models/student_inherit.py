@@ -5,36 +5,8 @@ from datetime import datetime
 class StudentMasterOne(models.Model):
     _inherit = 'student.master'
 
-    total_fees_accumulated = fields.Float(
-        string='Total Fees Accumulated',
-        default=0.0,
-        readonly=True
-    )
-    total_fees_receipted = fields.Float(
-        string='Total Receipted Amount',
-        default=0.0,
-        readonly=True
-    )
-    academic_id = fields.Many2one(
-        'student.academic',
-        string='Academic Record',
-        compute='_compute_academic_id',
-        store=True
-    )
 
-    current_balance = fields.Float(
-        string='Current Balance',
-        related='academic_id.current_balance',
-        store=True,
-        readonly=True
-    )
-
-
-    last_fee_addition = fields.Datetime(
-        string='Last Fee Addition',
-        readonly=True
-    )
-
+    """ 
     @api.depends('student_name')
     def _compute_academic_id(self):
         for student in self:
@@ -55,7 +27,7 @@ class StudentMasterOne(models.Model):
             student.academic_id = academic_record.id
 
 
-    """ 
+   
     fee_history_ids = fields.One2many(
         'fee.addition.history',
         'student_id',

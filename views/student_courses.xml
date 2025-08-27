@@ -3,12 +3,13 @@
         <!-- explicit list view definition -->
 
         <record model="ir.ui.view" id="student_course_list">
-            <field name="name">Course</field>
+            <field name="name">Courses</field>
             <field name="model">student.class.name</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="name"/>
-                    <field name="quarter_fee"/>
+                    <field name="name" string="Course Name" readonly="is_locked"/>
+                    <field name="quarter_fee" readonly="is_locked"/>
+                    <field name="admission_fee" readonly="is_locked"/>
                 </list>
             </field>
         </record>
@@ -18,9 +19,29 @@
             <field name="model">student.class.name</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <button name="action_save" type="object" string="Save"
+                                class="oe_highlight"
+                                invisible="is_locked"/>
+                        <button name="action_edit" type="object" string="Edit"
+                                invisible="not is_locked"/>
+                        <field name="is_locked" invisible="1"/>
+                    </header>
                     <sheet>
+                           <div class=" row oe_title">
+                            <div class="col-3 student-master-header">
+                                <img src="/school_master/static/description/batch.png"
+                                     alt="Student Icon" style="width: 100px; height: 100px;"/>
+                            </div>
+                            <div class="col-9 student-master-header">
+                                <h2 style="text-align: center;">
+                                    <b>COURSE MASTER</b>
+                                </h2>
+                            </div>
+                        </div>
+                        <hr/>
                         <group>
-                            <field name="name" readonly="is_locked"/>
+                            <field name="name" string="Course Name" readonly="is_locked"/>
                             <field name="quarter_fee" readonly="is_locked"/>
                             <field name="admission_fee" readonly="is_locked"/>
                         </group>

@@ -10,8 +10,8 @@
                     <field name="can_execute" invisible="1"/>
                 </group>
                 <footer>
-                    <button name="action_add_academic_fee_all" type="object" string="Run Update" class="btn-primary"
-                            invisible="not can_execute"/>
+                    <button name="action_add_academic_fee_all" type="object" string="Run Update" class="btn-primary"/>
+<!--                            invisible="not can_execute"/>-->
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>

@@ -38,9 +38,9 @@ Long description of module's purpose
     'assets': {
         'web.assets_backend': [
 
-            'school_master/static/src/js/student_warining_okbutton.js',
+            #'school_master/static/src/js/student_warining_okbutton.js',
 
-            'school_master/static/src/js/auto_logout.js',
+            #'school_master/static/src/js/auto_logout.js',
             'school_master/static/src/css/student_master.css'
 
         ],

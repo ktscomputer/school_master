@@ -11,7 +11,7 @@
                 <field name="year"/>
                 <field name="last_fee_addition"/>
                 <!--                <field name="academic_fee" readonly="is_locked"/>-->
-                <field name="current_balance" invisible="current_balance == 0" readonly="is_locked"/>
+                <field name="current_balance" invisible="current_balance == 0.00" readonly="is_locked"/>
             </list>
         </field>
     </record>
@@ -51,18 +51,12 @@
                     <div class="row" style="margin-top:20px;background-colour:grey;">
                         <div class="col-6">
                             <group>
-                                <field name="name" readonly="is_locked"/>
-                                <field name="course"/>
-                                <field name="year"/>
-                                <field name="current_balance"  readonly="is_locked"/>
-                                <field name="total_fees_accumulated" readonly="is_locked"/>
+
                             </group>
                         </div>
                         <div class="col-6">
                             <group>
-                                <field name="academic_fee" readonly="is_locked"/>
-                                <field name="admission_fee" readonly="is_locked"/>
-                                <field name="fee_receipt" readonly="is_locked"/>
+
                             </group>
                         </div>
                     </div>

@@ -55,20 +55,20 @@
                                 <field name="student_gender" readonly="is_locked"/>
                                 <field name="dob" readonly="is_locked" class="oe_inline"/>
                                 <field name="age" readonly="1" class="oe_inline"/>
-                                <field name="student_class" readonly="is_locked"/>
-                                <field name="student_class_name" readonly="is_locked"/>
-                                <field name="student_division" readonly="is_locked"/>
+                                <field name="student_class" readonly="is_locked"  options="{'no_create': True}"/>
+                                <field name="student_class_name" readonly="is_locked"  options="{'no_create': True}"/>
+                                <field name="student_division" readonly="is_locked"  options="{'no_create': True}"/>
                             </group>
                         </div>
                         <div class="col-4">
                             <group>
                                 <field name="student_guardian" readonly="is_locked"/>
-                                <field name="student_add1" readonly="is_locked"/>
-                                <field name="student_add2" readonly="is_locked"/>
-                                <field name="student_add3" readonly="is_locked"/>
+                                <field name="student_add" readonly="is_locked"/>
+                                <field name="pincode" readonly="is_locked"/>
+                                <field name="student_contact2" readonly="is_locked"/>
                                 <field name="student_contact1" readonly="is_locked"/>
-                                <field name="student_trans" readonly="is_locked"/>
-                                <field name="transport_mode" readonly="is_locked"/>
+<!--                                <field name="student_trans" readonly="is_locked"/>-->
+<!--                                <field name="transport_mode" readonly="is_locked"/>-->
                             </group>
                         </div>
                         <div class="col-4">
@@ -185,7 +185,7 @@
                                         <field name="student_guardian"/>
                                     </div>
                                     <div>Contact:
-                                        <field name="student_contact1"/>
+                                        <field name="student_contact2"/>
                                     </div>
                                     <!--                                    <div>Address:-->
                                     <!--                                        <t t-esc="'{}, {}, {}' % (record.student_add1.raw_value or '', record.student_add2.raw_value or '', record.student_add3.raw_value or '')"/>-->

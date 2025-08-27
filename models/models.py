@@ -24,6 +24,12 @@ class StudentClassNo(models.Model):
             'tag': 'reload',
         }
 
+    def action_cancel(self):
+        self.write({'is_locked': False})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
 
 class StudentClassName(models.Model):
@@ -43,6 +49,13 @@ class StudentClassName(models.Model):
         }
 
     def action_edit(self):
+        self.write({'is_locked': False})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
+    def action_cancel(self):
         self.write({'is_locked': False})
         return {
             'type': 'ir.actions.client',
@@ -75,6 +88,14 @@ class StudentDivision(models.Model):
         }
 
 
+    def action_cancel(self):
+        self.write({'is_locked': False})
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'student.division',
+            'view_mode': 'tree',
+            'target': 'main',
+         }
 class TeacherDesignation(models.Model):
     _name = 'teacher.designation'
     _description = 'Teachers Designation'
@@ -118,6 +139,8 @@ class ExamName(models.Model):
             'type': 'ir.actions.client',
             'tag': 'reload',
         }
+
+
 
 class ExamSubject(models.Model):
     _name = 'exam.subject'

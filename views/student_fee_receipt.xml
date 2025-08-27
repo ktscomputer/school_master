@@ -7,8 +7,9 @@
             <list>
                 <field name="name"/>
                 <field name="payment_date"/>
+                <field name="course_id"/>
+                <field name="year_id"/>
                 <field name="student_id" readonly="is_locked"/>
-                <field name="course" readonly="is_locked"/>
                 <field name="amount"/>
                 <field name="reference"/>
                 <field name="payment_method" readonly="is_locked"/>
@@ -24,9 +25,9 @@
                 <!--                    <button name="action_save" type="object" string="Save"-->
                 <!--                            class="oe_highlight"-->
                 <!--                            invisible="is_locked"/>-->
-<!--                                    <button name="action_run_fee_update" type="object" string="Tiger amount"-->
-<!--                                            class="oe_highlight"-->
-<!--                                    />-->
+                <!--                                    <button name="action_run_fee_update" type="object" string="Tiger amount"-->
+                <!--                                            class="oe_highlight"-->
+                <!--                                    />-->
                 <!--                    <button name="action_edit" type="object" string="Edit"-->
                 <!--                            invisible="not is_locked"/>-->
                 <!--                    <field name="is_locked" invisible="1"/>-->
@@ -52,12 +53,16 @@
                             <group>
                                 <field name="name"/>
                                 <field name="payment_date"/>
-                                <field name="student_id" readonly="is_locked"/>
-                                <field name="course" readonly="is_locked"/>
+                                <field name="course_id" readonly="is_locked"/>
+                                <field name="year_id" readonly="is_locked"/>
+                                <field name="student_id"
+                                       domain="[('student_class_name','=',course_id), ('student_class','=',year_id)]"
+                                       readonly="not (course_id and year_id)"
+                                       options="{'no_create': True, 'no_open': True}"/>
+
                                 <field name="amount"/>
                                 <field name="reference"/>
                                 <field name="payment_method" readonly="is_locked"/>
-
                             </group>
                         </div>
                     </div>
