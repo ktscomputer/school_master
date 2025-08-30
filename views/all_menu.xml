@@ -1,4 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <menuitem name="School Master" id="school_master_root" web_icon="school_master,static/description/webicon.png"/>
+
+    <!-- actions -->
+
+    <menuitem id="menu_student_master" name="Students Master" parent="school_master_root"
+              action="action_student_master" sequence="10"/>
+
+
+    <menuitem name="Teachers Master" id="teacher_master_menu" parent="school_master_root"
+              action="teacher_master_action_window"
+              sequence="20"/>
+
+    <menuitem name="Exam Master" id="school_exam_menu_list" parent="school_master_root"
+              action="exam_result_action_window"
+              sequence="30"/>
+
+    <menuitem id="menu_student_fee_root" name="Accounts" parent="school_master_root"
+              sequence="50"/>
+
+<!--    <menuitem id="menu_student_fee_details" name="Fee Details" parent="menu_student_fee_root"-->
+<!--              action="action_student_fee"-->
+<!--              sequence="10"/>-->
+      <menuitem id="student_fee_receipt" name="Receipt" parent="menu_student_fee_root"
+              action="action_student_fee_receipt"
+              sequence="20"/>
+    <menuitem id="student_invoice_menu" name="Invoices" parent="menu_student_fee_root"
+              action="action_student_invoice"
+              sequence="30"/>
+
+    <menuitem id="menu_student_ledger"
+              name="Ledger"
+              parent="menu_student_fee_root"
+              action="action_student_ledger_wizard" sequence="40"/>
 
 </odoo>

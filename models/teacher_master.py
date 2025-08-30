@@ -7,11 +7,15 @@ from odoo import models,fields,api
 class TeacherMaster(models.Model):
     _name = 'teacher.master'
     _description = 'Student Class Teacher'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
+
+
     name = fields.Char(string='Teacher Name', required=True)
     gender= fields.Selection([('male','Male'),('female','Female')],string='Gender',default='male')
     doj= fields.Date('Date of Joining')
     year_of_service = fields.Char(string='Servicing Years',compute='_compute_year_of_service',
-        store=True  # Optional: only include if you want to store the computed value
+        store=True
     )
 
 

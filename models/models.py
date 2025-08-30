@@ -34,7 +34,7 @@ class StudentClassNo(models.Model):
 
 class StudentClassName(models.Model):
     _name = 'student.class.name'
-    _description = 'Student Class'
+    _description = 'Available Courses and its fees'
 
     name = fields.Char(string='Class Name', required=True)
     admission_fee = fields.Float('Admission Fee')

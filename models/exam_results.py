@@ -6,18 +6,27 @@ from odoo import models, fields, api
 class ExamResult(models.Model):
     _name = 'exam.result'
     _description = 'Exam Result'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _rec_name = 'student_id'
 
 
-    student_id = fields.Many2one('student.master','Student Name')
-    exam_name_id = fields.Many2one('exam.name', string='Exam Name')
-    exam_subject_id = fields.Many2one('exam.subject', string='Subject')
-    exam_total_mark = fields.Float(string='Total Marks')
-    obtained_mark = fields.Float(string='Mark Obtained')
+
+    student_id = fields.Many2one('student.master','Student Name ',tracking=True)
+    exam_name_id = fields.Many2one('exam.name', string='Exam Name ',tracking=True)
+    exam_subject_id = fields.Many2one('exam.subject', string='Subject ',tracking=True)
+    exam_total_mark = fields.Float(string='Total Marks ',tracking=True)
+    obtained_mark = fields.Float(string='Mark Obtained ',tracking=True)
 
     # Grade fields (computed)
-    grade = fields.Char(string='Grade', compute='_compute_grade', store=True)
-    grade_point = fields.Float(string='Grade Point', compute='_compute_grade', store=True)
+    grade = fields.Char(string='Grade ', compute='_compute_grade', store=True)
+    grade_point = fields.Float(string='Grade Point ', compute='_compute_grade', store=True)
     is_locked = fields.Boolean(string='Locked', default=False)
+
+    # Add a related field to get the company logo
+    company_logo = fields.Binary(string='Company Logo', related='company_id.logo', readonly=True)
+    # Ensure company_id exists in the model
+    company_id = fields.Many2one(
+        'res.company', string='Company', default=lambda self: self.env.company, readonly=True)
 
 
     def action_save(self):

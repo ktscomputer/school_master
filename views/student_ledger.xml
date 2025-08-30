@@ -1,0 +1,50 @@
+<odoo>
+    <!-- Wizard Form -->
+    <record id="view_student_ledger_wizard_form" model="ir.ui.view">
+        <field name="name">student.ledger.wizard.form</field>
+        <field name="model">student.ledger.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Student Ledger">
+
+                    <div class="row" style="border:1px solid black;padding:10px; margin:auto;">
+                        <div class="col-3">
+                            <group>
+                                <field name="student_id"/>
+                            </group>
+                        </div>
+                        <div class="col-3">
+                            <group>
+                                <field name="date_from"/>
+                            </group>
+                        </div>
+                        <div class="col-3">
+                            <group>
+                                <field name="date_to"/>
+                            </group>
+
+                        </div>
+                        <div class="col-3">
+                            <button name="action_generate_ledger" type="object" string="Generate"
+                                    class="btn-primary"/>
+                        </div>
+                    </div>
+                     <separator string="Ledger Result"/>
+                    <div class="row">
+                        <field name="result_html" nolabel="1" readonly="1"/>
+                    </div>
+
+
+            </form>
+        </field>
+    </record>
+
+    <!-- Menu / Action -->
+    <record id="action_student_ledger_wizard" model="ir.actions.act_window">
+        <field name="name">Student Ledger</field>
+        <field name="res_model">student.ledger.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+
+</odoo>

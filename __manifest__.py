@@ -24,6 +24,7 @@ Long description of module's purpose
     'data': [
         'security/ir.model.access.csv',
         'data/receipt_sequence.xml',
+        'data/roll_number_sequence.xml',
         'views/views.xml',
         'views/student_master.xml',
         'views/error.action.message.xml',
@@ -31,8 +32,11 @@ Long description of module's purpose
         'views/settings.xml',
         'views/student_fee.xml',
         'views/student_fee_receipt.xml',
+        'views/student_fee_invoice.xml',
+        'views/student_ledger.xml',
         'views/student_courses.xml',
         'views/fee_update_wizard.xml',
+        'views/all_menu.xml',
     ],
 
     'assets': {

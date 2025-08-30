@@ -111,7 +111,7 @@
 
         <menuitem name="Configuration" id="configuration_menu_list" parent="school_master_root"
                   sequence="60"/>
-        <menuitem name="Batches" id="batch_menu" parent="configuration_menu_list"
+        <menuitem name="Batch" id="batch_menu" parent="configuration_menu_list"
                   action="student_batch_action_window"
                   sequence="10"/>
         <menuitem name="Year" id="year_menu" parent="configuration_menu_list"
