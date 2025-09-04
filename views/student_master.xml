@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record model="ir.ui.view" id="student_master_list">
-        <field name="name">student.master.form</field>
+        <field name="name">student.master.list</field>
         <field name="model">student.master</field>
         <field name="arch" type="xml">
             <list>
@@ -10,77 +10,74 @@
                 <field name="student_class" readonly="is_locked"/>
                 <field name="student_class_name" readonly="is_locked"/>
                 <field name="student_guardian" readonly="is_locked"/>
-                <field name="student_contact1" readonly="is_locked"/>
+                <field name="student_contact2" readonly="is_locked"/>
             </list>
-
         </field>
     </record>
+
     <record model="ir.ui.view" id="student_master_form">
         <field name="name">student.master.form</field>
         <field name="model">student.master</field>
         <field name="arch" type="xml">
-            <form create="true" edit="true">
+          <form create="true" edit="true"> <!-- js_class="student_master_form">-->
                 <header>
-                    <button name="action_save" type="object" string="Save"
-                            class="oe_highlight"
-                            invisible="is_locked"/>
-                    <button name="action_edit" type="object" string="Edit"
-                            invisible="not is_locked"/>
+                    <button name="action_save" type="object" string="Confirm" class="oe_highlight" invisible="is_locked"/>
+                    <button name="action_edit" type="object" string="Reset to draft" invisible="not is_locked"/>
+                    <button name="action_new_receipt" string="New Student" type="object" class="btn-success"/>
+                    <button name="action_cancel" string="Cancel" type="object" class="btn-secondary" special="cancel"/>
                     <field name="is_locked" invisible="1"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                 </header>
                 <sheet>
-                    <div class=" row oe_title">
-
-                        <!--                            <img src="/school_master/static/description/college_logo.jpeg"-->
-                        <!--                                 alt="Logo" style="width: 150px; height: 150px;"/>-->
-                        <div class="col-3 student-master-header">
-                            <field name="company_logo" widget="image" class="o_logo_company"
-                                   style="max-width: 100%; max-height: 100%;"
-                                   alt="Company Logo" readonly="1"/>
+                    <div class="row align-items-center py-3" style="min-height:100px; border-bottom: 2px solid #000;">
+                        <div class="col-6 d-flex align-items-center">
+                            <div class="me-3">
+                                <field name="company_logo" widget="image" class="o_logo_company"
+                                       style="max-width: 80px; max-height: 80px; object-fit: contain;"
+                                       alt="Company Logo" readonly="1"/>
+                            </div>
+                            <div>
+                                <h5 class="m-0 fw-bold text-dark">
+                                    <field name="company_id"/>
+                                </h5>
+                            </div>
                         </div>
-                        <div class="col-9 student-master-header">
-                            <img src="/school_master/static/description/student.png"
-                                 alt="Student Icon" style="width: 60px; height: 60px;"/>
-                            <h3 style="text-align: right;">
-                                <b>STUDENT MASTER</b>
+                        <div class="col-6 d-flex justify-content-end align-items-center">
+                            <h3 class="m-0 fw-bold text-primary" style="letter-spacing: 1px;">
+                                STUDENT MASTER
                             </h3>
                         </div>
                     </div>
-                    <hr style="color:blue"/>
-                    <div class="row ">
+                    <div class="row" style="margin-top:10px;">
                         <div class="col-4">
                             <group>
-                                <field name="student_roll_number" string="Student ID" readonly="is_locked"/>
-                                <field name="student_name" readonly="is_locked"/>
-                                <field name="student_gender" readonly="is_locked"/>
-                                <field name="dob" readonly="is_locked" class="oe_inline"/>
+                                <field name="name"/>
+                                <field name="student_name" required="1"/>
+                                <field name="student_gender"/>
+                                <field name="dob" class="oe_inline"/>
                                 <field name="age" readonly="1" class="oe_inline"/>
-                                <field name="student_class" readonly="is_locked"  options="{'no_create': True}"/>
-                                <field name="student_class_name" readonly="is_locked"  options="{'no_create': True}"/>
-                                <field name="student_division" readonly="is_locked"  options="{'no_create': True}"/>
+                                <field name="student_class" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="student_class_name" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="student_division" options="{'no_create': True, 'no_open': True}"/>
                             </group>
                         </div>
                         <div class="col-4">
                             <group>
-                                <field name="student_guardian" readonly="is_locked"/>
-                                <field name="student_add" readonly="is_locked"/>
-                                <field name="pincode" readonly="is_locked"/>
-                                <field name="student_contact2" readonly="is_locked"/>
-                                <field name="student_contact1" readonly="is_locked"/>
-<!--                                <field name="student_trans" readonly="is_locked"/>-->
-<!--                                <field name="transport_mode" readonly="is_locked"/>-->
+                                <field name="student_guardian"/>
+                                <field name="student_add"/>
+                                <field name="pincode"/>
+                                <field name="student_contact2"/>
+                                <field name="student_contact1"/>
                             </group>
                         </div>
                         <div class="col-4">
                             <group>
-                                <field name="student_img" widget="image" style="width: 128px; height: 128px;"
-                                       readonly="is_locked"/>
-                                <field name="teacher_id" readonly="is_locked"/>
-                                <field name="aadhaar_card" readonly="is_locked"/>
-                                <field name="current_balance" string='Fee Pending' readonly="is_locked"/>
-                                <button name="action_pay_now" type="object" string="Pay Now"
-                                    class="oe_highlight"
-                                    invisible="current_balance &lt;= 0"/>
+                                <field name="student_img" widget="image" style="width: 128px; height: 128px;"/>
+                                <field name="teacher_id"/>
+                                <field name="aadhaar_card"/>
+                                <field name="current_balance" string='Fee Pending :'/>
+                                <button name="action_pay_now" type="object" string="Pay Now" class="oe_highlight"
+                                        invisible="current_balance &lt;= 0"/>
                             </group>
                         </div>
                     </div>
@@ -121,8 +118,30 @@
                                             states="unpaid,late"/>
                                 </list>
                             </field>
-                            <!--                            <button name="action_generate_monthly_fees" string="Generate Monthly Fees" type="object"-->
-                            <!--                                    class="oe_highlight"/>-->
+                        </page>
+                        <page string="Invoice Details">
+                            <field name="fee_invoice_ids" readonly="1">
+                                <list options="{'no_open': True}">
+                                    <field name="invoice_date"/>
+                                    <field name="student_id"/>
+                                    <field name="course_id"/>
+                                    <field name="year_id"/>
+                                    <field name="amount"/>
+                                    <field name="description"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Receipt Details">
+                            <field name="fee_receipt_ids" readonly="1">
+                                <list options="{'no_open': True}">
+                                    <field name="name"/>
+                                    <field name="payment_date"/>
+                                    <field name="student_id" readonly="is_locked"/>
+                                    <field name="amount"/>
+                                    <field name="reference"/>
+                                    <field name="payment_method" readonly="is_locked"/>
+                                </list>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
@@ -131,12 +150,11 @@
         </field>
     </record>
 
-    <!-- Kanban View (for completeness) -->
-    <record model="ir.ui.view" id="view_student_master_kanban">
+    <record model="ir.ui.view" id="student_master_kanban">
         <field name="name">student.master.kanban</field>
         <field name="model">student.master</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="student_class_name">
+            <kanban default_group_by="student_class_name"> <!--js_class="student_master_kanban">-->
                 <field name="student_name"/>
                 <field name="student_gender"/>
                 <field name="student_class"/>
@@ -154,46 +172,21 @@
                     <t t-name="card">
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="student-master-kanban">
-                                <!--                                <img t-att-src="'/student_master/static/description/icon.png'"-->
-                                <!--                                     alt="Student Icon" class="oe_kanban_icon"/>-->
                                 <img t-if="record.student_img.raw_value"
                                      t-attf-src="/web/image/student.master/#{record.id.raw_value}/student_img"
                                      class="oe_kanban_image student-photo" alt="Student Photo"/>
                                 <div class="oe_kanban_details">
                                     <h4 style="color: red; text-align: center;">
-                                        <b>
-                                            <field name="student_name"/>
-                                        </b>
+                                        <b><field name="student_name"/></b>
                                     </h4>
-                                    <div>Student ID:
-                                        <field name="student_roll_number"/>
-                                    </div>
-                                    <div>Gender:
-                                        <field name="student_gender"/>
-                                    </div>
-                                    <div>Year:
-                                        <field name="student_class"/>
-                                    </div>
-                                    <div>Course:
-                                        <field name="student_class_name"/>
-                                    </div>
-                                    <div>Batch:
-                                        <field name="student_division"/>
-                                    </div>
-
-                                    <div>Guardian:
-                                        <field name="student_guardian"/>
-                                    </div>
-                                    <div>Contact:
-                                        <field name="student_contact2"/>
-                                    </div>
-                                    <!--                                    <div>Address:-->
-                                    <!--                                        <t t-esc="'{}, {}, {}' % (record.student_add1.raw_value or '', record.student_add2.raw_value or '', record.student_add3.raw_value or '')"/>-->
-                                    <!--                                    </div>-->
-                                    <div>Class Teacher:
-                                        <field name="teacher_id"/>
-                                    </div>
-
+                                    <div>Admission Number: <field name="name"/></div>
+                                    <div>Gender: <field name="student_gender"/></div>
+                                    <div>Year: <field name="student_class"/></div>
+                                    <div>Course: <field name="student_class_name"/></div>
+                                    <div>Batch: <field name="student_division"/></div>
+                                    <div>Guardian: <field name="student_guardian"/></div>
+                                    <div>Contact: <field name="student_contact2"/></div>
+                                    <div>Class Teacher: <field name="teacher_id"/></div>
                                 </div>
                             </div>
                         </div>
@@ -202,15 +195,11 @@
             </kanban>
         </field>
     </record>
-    <!-- Action -->
+
     <record id="action_student_master" model="ir.actions.act_window">
         <field name="name">Student Master</field>
         <field name="res_model">student.master</field>
         <field name="view_mode">kanban,form,list</field>
+          <field name="view_id" ref="student_master_kanban"/>
     </record>
-
-    <!-- Menu Item -->
-
-    <menuitem id="menu_student_master" name="Students Master" parent="school_master_root"
-              action="action_student_master" sequence="10"/>
 </odoo>

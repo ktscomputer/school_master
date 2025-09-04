@@ -77,9 +77,5 @@
     </record>
 
     <!-- Menu Item -->
-    <menuitem id="menu_student_fee_root" name="Fee Master" parent="school_master_root"
-              sequence="50"/>
-    <menuitem id="menu_student_fee_details" name="Fee Details" parent="menu_student_fee_root"
-              action="action_student_fee"
-              sequence="10"/>
+
 </odoo>

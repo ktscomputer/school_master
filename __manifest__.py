@@ -24,6 +24,7 @@ Long description of module's purpose
     'data': [
         'security/ir.model.access.csv',
         'data/receipt_sequence.xml',
+        'data/roll_number_sequence.xml',
         'views/views.xml',
         'views/student_master.xml',
         'views/error.action.message.xml',
@@ -31,17 +32,24 @@ Long description of module's purpose
         'views/settings.xml',
         'views/student_fee.xml',
         'views/student_fee_receipt.xml',
+        'views/student_fee_invoice.xml',
+        'views/student_ledger.xml',
         'views/student_courses.xml',
         'views/fee_update_wizard.xml',
+        'views/all_menu.xml',
+
     ],
 
     'assets': {
         'web.assets_backend': [
 
             #'school_master/static/src/js/student_warining_okbutton.js',
-
+            'school_master/static/src/js/student_master_warning.js',
+            # 'school_master/static/src/js/student_master_kanban.js',
+            # 'school_master/static/src/js/cancel_button.js',
             #'school_master/static/src/js/auto_logout.js',
-            'school_master/static/src/css/student_master.css'
+            'school_master/static/src/css/student_master.css',
+            'school_master/static/src/css/hide_form_icon.css',
 
         ],
     },
@@ -49,4 +57,5 @@ Long description of module's purpose
     'demo': [
         'demo/demo.xml',
     ],
+    'application':True,
 }

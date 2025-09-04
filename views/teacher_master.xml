@@ -20,22 +20,41 @@
             <field name="model">teacher.master</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                         <button name="action_save" type="object" string="Confirm"
+                                class="oe_highlight"
+                                invisible="is_locked"/>
+                        <button name="action_edit" type="object" string="Reset to draft"
+                                invisible="not is_locked"/>
+                        <button name="action_new_teacher" string="New Teacher" type="object"
+                                class="btn-success"/>
+                        <field name="is_locked" invisible="1"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                    </header>
                     <sheet>
-                        <div class=" row oe_title">
-                            <div class="col-3 student-master-header">
+
+                        <div class="row align-items-center py-3" style="min-height:100px; border-bottom: 2px solid #000;">
+                        <!-- Left Side: Company Logo & Name -->
+                        <div class="col-6 d-flex align-items-center">
+                            <div class="me-3">
                                 <field name="company_logo" widget="image" class="o_logo_company"
-                                   style="max-width: 100%; max-height: 100%;"
-                                   alt="Company Logo" readonly="1"/>
+                                       style="max-width: 80px; max-height: 80px; object-fit: contain;"
+                                       alt="Company Logo" readonly="1"/>
                             </div>
-                            <div class="col-9 student-master-header">
-                                <img src="/teacher_master/static/description/icon.png"
-                                     alt="Teacher Icon" style="width: 60px; height: 60px;"/>
-                                <h3 style="text-align: center;">
-                                    <b>TEACHER MASTER</b>
-                                </h3>
+                            <div>
+                                <h5 class="m-0 fw-bold text-dark">
+                                    <field name="company_id"/>
+                                </h5>
                             </div>
                         </div>
-                        <hr/>
+
+                        <!-- Right Side: Student Master Title -->
+                        <div class="col-6 d-flex justify-content-end align-items-center">
+                            <h3 class="m-0 fw-bold text-primary" style="letter-spacing: 1px;">
+                                TEACHER MASTER
+                            </h3>
+                        </div>
+                    </div>
                         <div class="row" style="margin-top:60px">
                             <div class="col-6">
                                 <group>
@@ -52,12 +71,14 @@
                                     <field name="address"/>
                                     <field name="designation_id"/>
                                     <field name="std" widget="many2many_tags"/>
+                                    <field name="active"/>
                                 </group>
                             </div>
                         </div>
                     </sheet>
-
+  <chatter/>
                 </form>
+
             </field>
         </record>
 
@@ -71,9 +92,6 @@
         </record>
 
 
-        <menuitem name="Teachers Master" id="teacher_master_menu" parent="school_master_root"
-                  action="teacher_master_action_window"
-                  sequence="20"/>
 
     </data>
 </odoo>

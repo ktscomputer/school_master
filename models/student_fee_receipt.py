@@ -13,51 +13,84 @@ class StudentFeeReceipt(models.Model):
     _name = 'student.fee.receipt'
     _description = 'Student Fee Receipts'
     _rec_name = 'student_id'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(
-        string='Receipt Number',
-        readonly=True,
-        default='New'
-    )
+
+    name = fields.Char(string='Receipt Number',readonly=True,default='New')
     #student_id = fields.Many2one('student.master', string='Student Name')
     student_id = fields.Many2one(
         'student.master',
         string='Student Name',
         domain="[('student_class_name','=',course_id), ('student_class','=',year_id)]",
-        required=True,
+        required=True,tracking=True
     )
     academic_id = fields.Many2one('student.academic', string='Academic Record', related='student_id.academic_id',
                                   store=True)
-    course_id = fields.Many2one('student.class.name', string='Select Course')
-    year_id = fields.Many2one('student.class.no', string='Select Year')
-    amount = fields.Float(string='Amount', required=True)
+    course_id = fields.Many2one('student.class.name', string='Select Course',tracking=True)
+    year_id = fields.Many2one('student.class.no', string='Select Year',tracking=True)
+    amount = fields.Float(string='Amount', required=True,tracking=True)
     payment_date = fields.Datetime(string='Payment Date', default=fields.Datetime.now)
     payment_method = fields.Selection([
         ('cash', 'Cash'),
         ('bank', 'Bank Transfer'),
         ('card', 'Credit/Debit Card'),
         ('online', 'Online Payment')
-    ], string='Payment Method', default='cash')
-    reference = fields.Char(string='Payment Reference')
+    ], string='Payment Method', default='cash',tracking=True)
+    reference = fields.Char(string='Payment Reference',tracking=True)
     collected_by = fields.Many2one(
         'res.users', string='Collected By', default=lambda self: self.env.user
     )
     is_locked = fields.Boolean(string='Locked', default=False)
+    # Add a related field to get the company logo
+    company_logo = fields.Binary(string='Company Logo', related='company_id.logo', readonly=True)
+    # Ensure company_id exists in the model
+    company_id = fields.Many2one(
+        'res.company', string='Company', default=lambda self: self.env.company, readonly=True)
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+    ], string="Status", default='draft', tracking=True)
+
+    receipt_type = fields.Selection([
+        ('charge', 'Charge'),
+        ('payment', 'Payment')
+    ], default='payment', string="Type", tracking=True)
+
+    def action_new_receipt(self):
+        """Open a blank new form for another receipt"""
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'New Fee Receipt',
+            'res_model': 'student.fee.receipt',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {'default_state': 'draft'}
+        }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('name') or vals['name'] == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('student.fee.receipt') or 'New'
+
+        records = super().create(vals_list)
+        return records
 
     # Locking / Unlocking
     def action_save(self):
         self.write({'is_locked': True})
+        for rec in self:
+            rec.state = 'confirmed'
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     def action_edit(self):
         self.write({'is_locked': False})
+        for rec in self:
+            rec.state = 'draft'
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
-    # Restrict editing if locked
-    def write(self, vals):
-        if any(rec.is_locked for rec in self):
-            raise UserError(_("You cannot edit a locked receipt."))
-        return super().write(vals)
+
 
     # Filter students by selected course and year
     @api.onchange('course_id', 'year_id')
@@ -80,23 +113,17 @@ class StudentFeeReceipt(models.Model):
             _logger.info("No course/year selected, student list cleared")
         return {'domain': domain}
 
-    @api.onchange('student_id')
-    def _onchange_student_id(self):
-        """Update course and year based on student"""
-        if self.student_id:
-            self.course_id = self.student_id.student_class_name.id
-            self.year_id = self.student_id.student_class.id
-            if self.student_id.academic_id:
-                self.amount = self.student_id.academic_id.current_balance
+    # @api.onchange('student_id')
+    # def _onchange_student_id(self):
+    #     """Update course and year based on student"""
+    #     if self.student_id:
+    #         self.course_id = self.student_id.student_class_name.id
+    #         self.year_id = self.student_id.student_class.id
+    #         if self.student_id.academic_id:
+    #             self.amount = self.student_id.academic_id.current_balance
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if not vals.get('name') or vals['name'] == 'New':
-                vals['name'] = self.env['ir.sequence'].next_by_code('student.fee.receipt') or 'New'
 
-        records = super().create(vals_list)
-
+        """ 
         # Update academic record with payment
         for rec in records:
             if rec.academic_id and rec.amount > 0:
@@ -120,7 +147,13 @@ class StudentFeeReceipt(models.Model):
                     _logger.error(f"Unexpected error processing payment: {e}")
                     raise UserError(f"Unexpected error occurred: {e}")
 
-        return records
+    """
+        # # Restrict editing if locked
+        # def write(self, vals):
+        #     if any(rec.is_locked for rec in self):
+        #         raise UserError(_("You cannot edit a locked receipt."))
+        #     return super().write(vals)
+
 
 
 
@@ -133,32 +166,63 @@ class FeeUpdateWizard(models.TransientModel):
     confirm = fields.Boolean(string="Confirm Fee Update?")
     can_execute = fields.Boolean(string="Can Execute", compute='_compute_can_execute', store=False)
 
-    def action_add_academic_fee_all(self):
-        academic_students = self.env['student.academic'].search([])
-        updated_count = 0
+    def action_generate_invoices(self):
+        """ Generate quarterly invoices for all students """
+        if not self.confirm:
+            return {'type': 'ir.actions.act_window_close'}
 
-        for academic in academic_students:
-            # Get the course fee from student.class.name based on the course
-            if academic.course:
-                course = self.env['student.class.name'].search([('name', '=', academic.course)], limit=1)
-                if course and course.quarter_fee > 0:
-                    academic.write({
-                        'total_fees_accumulated': academic.total_fees_accumulated + course.quarter_fee,
-                        'last_fee_addition': fields.Datetime.now(),
-                    })
-                    updated_count += 1
-                    _logger.info("Added fee %s for student %s (Course: %s)", course.quarter_fee, academic.name,
-                                 academic.course)
+        students = self.env['student.master'].search([])
+        invoice_count = 0
 
-        _logger.info("Academic fees updated for %s students", updated_count)
+        for student in students:
+            course = student.student_class_name
+            if course and course.quarter_fee > 0:
+                # Always use course fee as description
+                description = f"Quarterly Fee - {course.name}"
+
+                invoice_vals = {
+                    'student_id': student.id,
+                    'course_id': course.id,
+                    'year_id': student.student_class.id if student.student_class else False,
+                    'invoice_date': fields.Date.today(),
+                    'description': description,
+                    'amount': course.quarter_fee,
+                    'state': 'confirmed',
+                    'company_id': self.env.company.id,
+                }
+                self.env['student.fee.invoice'].create(invoice_vals)
+                invoice_count += 1
+
+                _logger.info(
+                    "Created invoice %.2f for student %s (Course: %s)",
+                    course.quarter_fee, student.student_name, course.name
+                )
+
+        # Save execution date for quarterly restriction
+        self.env['ir.config_parameter'].sudo().set_param(
+            'fee_update.last_execution', fields.Datetime.now()
+        )
+
+        _logger.info("Quarterly invoices generated: %s", invoice_count)
         return {'type': 'ir.actions.act_window_close'}
 
+    # @api.depends()
+    # def _compute_can_execute(self):
+    #     """ Allow execution only if 90+ days passed since last run """
+    #     last_execution = self.env['ir.config_parameter'].sudo().get_param('fee_update.last_execution')
+    #     if last_execution:
+    #         last_date = fields.Datetime.from_string(last_execution)
+    #         time_diff = (fields.Datetime.now() - last_date).days
+    #         self.can_execute = time_diff >= 90
+    #     else:
+    #         self.can_execute = True
     @api.depends()
     def _compute_can_execute(self):
-        last_execution = self.env['ir.config_parameter'].get_param('fee_update.last_execution')
+        """ Allow execution only if 5+ minutes passed since last run (for testing) """
+        last_execution = self.env['ir.config_parameter'].sudo().get_param('fee_update.last_execution')
         if last_execution:
             last_date = fields.Datetime.from_string(last_execution)
-            time_diff = (fields.Datetime.now() - last_date).days
-            self.can_execute = time_diff = 0  # 90 days = quarter
+            time_diff = (fields.Datetime.now() - last_date).total_seconds() / 60  # in minutes
+            self.can_execute = time_diff >= 5  # 5 minutes for testing
         else:
             self.can_execute = True

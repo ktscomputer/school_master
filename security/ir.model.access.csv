@@ -13,6 +13,12 @@ school_master.access_transport_monthly_fee,access_transport_monthly_fee,school_m
 school_master.access_student_academic,access_student_academic,school_master.model_student_academic,base.group_user,1,1,1,1
 school_master.access_student_fee_receipt,access_student_fee_receipt,school_master.model_student_fee_receipt,base.group_user,1,1,1,1
 school_master.access_fee_update_wizard,access_fee_update_wizard,school_master.model_fee_update_wizard,base.group_user,1,1,1,1
+school_master.access_student_fee_invoice,access_student_fee_invoice,school_master.model_student_fee_invoice,base.group_user,1,1,1,1
+school_master.access_student_ledger,access_student_ledger,school_master.model_student_ledger,base.group_user,1,1,1,1
+school_master.access_student_ledger_wizard,access_student_ledger_wizard,school_master.model_student_ledger_wizard,base.group_user,1,1,1,1
+
+
+
 
 
 
