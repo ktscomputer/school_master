@@ -11,11 +11,11 @@ class ExamResult(models.Model):
 
 
 
-    student_id = fields.Many2one('student.master','Student Name ',tracking=True)
-    exam_name_id = fields.Many2one('exam.name', string='Exam Name ',tracking=True)
-    exam_subject_id = fields.Many2one('exam.subject', string='Subject ',tracking=True)
-    exam_total_mark = fields.Float(string='Total Marks ',tracking=True)
-    obtained_mark = fields.Float(string='Mark Obtained ',tracking=True)
+    student_id = fields.Many2one('student.master','Student Name ',tracking=True,required=True)
+    exam_name_id = fields.Many2one('exam.name', string='Exam Name ',tracking=True,required=True)
+    exam_subject_id = fields.Many2one('exam.subject', string='Subject ',tracking=True,required=True)
+    exam_total_mark = fields.Float(string='Total Marks ',tracking=True,required=True)
+    obtained_mark = fields.Float(string='Mark Obtained ',tracking=True,required=True)
 
     # Grade fields (computed)
     grade = fields.Char(string='Grade ', compute='_compute_grade', store=True)
@@ -28,50 +28,69 @@ class ExamResult(models.Model):
     company_id = fields.Many2one(
         'res.company', string='Company', default=lambda self: self.env.company, readonly=True)
 
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+    ], string="Status", default='draft', tracking=True)
 
     def action_save(self):
         self.write({'is_locked': True})
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
+        for rec in self:
+            rec.state = 'confirmed'
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     def action_edit(self):
         self.write({'is_locked': False})
+        for rec in self:
+            rec.state = 'draft'
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    def action_new_result(self):
+        """Open a blank new form for another receipt"""
         return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
+            'type': 'ir.actions.act_window',
+            'name': 'New Year',
+            'res_model': 'student.class.no',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {'default_state': 'draft'}
         }
 
-    @api.depends('obtained_mark')
+
+    @api.depends('obtained_mark', 'exam_total_mark')
     def _compute_grade(self):
         for record in self:
-            mark = record.obtained_mark
+            # Avoid division by zero
+            if record.exam_total_mark > 0:
+                percentage = (record.obtained_mark / record.exam_total_mark) * 100
+            else:
+                percentage = 0
 
-            # Define your grading system (mark ranges to grades)
-            if mark >= 90:
+            # Define your grading system (percentage to grades)
+            if percentage >= 90:
                 record.grade = 'A+'
                 record.grade_point = 4.0
-            elif mark >= 80:
+            elif percentage >= 80:
                 record.grade = 'A'
                 record.grade_point = 3.75
-            elif mark >= 75:
+            elif percentage >= 75:
                 record.grade = 'B+'
                 record.grade_point = 3.5
-            elif mark >= 70:
+            elif percentage >= 70:
                 record.grade = 'B'
                 record.grade_point = 3.0
-            elif mark >= 65:
+            elif percentage >= 65:
                 record.grade = 'C+'
                 record.grade_point = 2.5
-            elif mark >= 60:
+            elif percentage >= 60:
                 record.grade = 'C'
                 record.grade_point = 2.0
-            elif mark >= 50:
+            elif percentage >= 50:
                 record.grade = 'D'
                 record.grade_point = 1.0
             else:
                 record.grade = 'F'
                 record.grade_point = 0.0
+
 
 

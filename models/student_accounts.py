@@ -34,3 +34,14 @@ class StudentFeeInvoice(models.Model):
     company_id = fields.Many2one(
         'res.company', string='Company', default=lambda self: self.env.company, readonly=True)
 
+
+    @api.onchange('student_id')
+    def _onchange_student_id(self):
+        for rec in self:
+            if rec.student_id:
+                rec.course_id = rec.student_id.student_class_name.id
+                rec.year_id = rec.student_id.student_class.id
+            else:
+                rec.course_id = False
+                rec.year_id = False
+

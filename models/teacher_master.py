@@ -1,4 +1,5 @@
 from datetime import date
+from email.policy import default
 
 from dateutil.relativedelta import relativedelta
 
@@ -17,6 +18,7 @@ class TeacherMaster(models.Model):
     year_of_service = fields.Char(string='Servicing Years',compute='_compute_year_of_service',
         store=True
     )
+    active=fields.Boolean('Active',default=True)
 
 
     contact_no = fields.Char(string='Contact No')
@@ -24,6 +26,7 @@ class TeacherMaster(models.Model):
     address = fields.Text('Address')
     designation_id = fields.Many2one('teacher.designation',string='Designation')
     std = fields.Many2many('student.class.no',string='Class')
+    is_locked = fields.Boolean(string='Locked', default=False)
 
     # Add a related field to get the company logo
     company_logo = fields.Binary(
@@ -54,3 +57,31 @@ class TeacherMaster(models.Model):
                 record.year_of_service = f"{delta.years}y {delta.months}m {delta.days}d"
             else:
                 record.year_of_service = "0y 0m 0d"
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+    ], string="Status", default='draft', tracking=True)
+
+    def action_save(self):
+        self.write({'is_locked': True})
+        for rec in self:
+            rec.state = 'confirmed'
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    def action_edit(self):
+        self.write({'is_locked': False})
+        for rec in self:
+            rec.state = 'draft'
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    def action_new_teacher(self):
+        """Open a blank new form for another receipt"""
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'New Year',
+            'res_model': 'student.teacher',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {'default_state': 'draft'}
+        }

@@ -37,15 +37,19 @@ Long description of module's purpose
         'views/student_courses.xml',
         'views/fee_update_wizard.xml',
         'views/all_menu.xml',
+
     ],
 
     'assets': {
         'web.assets_backend': [
 
             #'school_master/static/src/js/student_warining_okbutton.js',
-
+            'school_master/static/src/js/student_master_warning.js',
+            # 'school_master/static/src/js/student_master_kanban.js',
+            # 'school_master/static/src/js/cancel_button.js',
             #'school_master/static/src/js/auto_logout.js',
-            'school_master/static/src/css/student_master.css'
+            'school_master/static/src/css/student_master.css',
+            'school_master/static/src/css/hide_form_icon.css',
 
         ],
     },
@@ -53,4 +57,5 @@ Long description of module's purpose
     'demo': [
         'demo/demo.xml',
     ],
+    'application':True,
 }

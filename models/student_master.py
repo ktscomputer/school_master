@@ -15,33 +15,33 @@ class StudentMaster(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Admission Number',readonly=True, default='New')
-    student_name = fields.Char(string='Student Name :', required=True, tracking=True)
+    student_name = fields.Char(string='Student Name ', required=True, tracking=True)
     student_gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
-    ], string='Gender :')
-    dob = fields.Date(string='D O B :')
-    age = fields.Integer(string='Age :', compute='_compute_age', readonly=True, store=False)
-    student_class = fields.Many2one('student.class.no', string='Year :', tracking=True)
-    student_class_name = fields.Many2one('student.class.name', string='Course :', tracking=True)
-    student_division = fields.Many2one('student.division', string='Batch :')
-    teacher_id = fields.Many2one('teacher.master', string='Teacher :')
-    student_roll_number = fields.Integer(string='Roll Number :')
-    student_guardian = fields.Char(string='Daughter/Son Of :')
-    student_add = fields.Text('Address :')
-    pincode = fields.Char('Pin Code :')
-    student_add1 = fields.Char(string='House Name :', )
-    student_add2 = fields.Char(string='Location :')
-    student_add3 = fields.Char(string='City :')
-    student_contact1 = fields.Char(string='Student Mobile Number :', size=10)
-    student_contact2 = fields.Char(string=' Guardian Mobile Number :', size=10)
-    student_img = fields.Image(string='Photo :', max_width=128, max_height=128)
+    ], string='Gender ')
+    dob = fields.Date(string='D O B ')
+    age = fields.Integer(string='Age ', compute='_compute_age', readonly=True, store=False)
+    student_class = fields.Many2one('student.class.no', string='Year ', tracking=True)
+    student_class_name = fields.Many2one('student.class.name', string='Course ', tracking=True)
+    student_division = fields.Many2one('student.division', string='Batch ')
+    teacher_id = fields.Many2one('teacher.master', string='Teacher ')
+    student_roll_number = fields.Integer(string='Roll Number ')
+    student_guardian = fields.Char(string='Daughter/Son Of ')
+    student_add = fields.Text('Address ')
+    pincode = fields.Char('Pin Code ')
+    student_add1 = fields.Char(string='House Name ', )
+    student_add2 = fields.Char(string='Location ')
+    student_add3 = fields.Char(string='City ')
+    student_contact1 = fields.Char(string='Student Mobile Number ', size=10)
+    student_contact2 = fields.Char(string=' Guardian Mobile Number ', size=10)
+    student_img = fields.Image(string='Photo ', max_width=128, max_height=128)
     student_trans = fields.Selection([('school_bus', 'School Bus'), ('auto', 'Auto'), ('self', 'Self')],
-                                     string='Transportation :')
-    transport_mode = fields.Selection([('one_way', 'One Way'), ('two_way', 'Two Way')], string='Transportation Mode :')
+                                     string='Transportation ')
+    transport_mode = fields.Selection([('one_way', 'One Way'), ('two_way', 'Two Way')], string='Transportation Mode ')
     is_locked = fields.Boolean(string='Locked', default=False)
-    aadhaar_card = fields.Char(string='Aadhaar Card No :')
+    aadhaar_card = fields.Char(string='Aadhaar Card No ')
     has_aadhaar = fields.Boolean(compute='_compute_has_aadhaar', store=True)
     active = fields.Boolean(string='Active', default=True)
 
@@ -184,3 +184,20 @@ class StudentMaster(models.Model):
             payments = sum(rc.amount for rc in rec.fee_receipt_ids if rc.state == 'confirmed')
             rec.current_balance = charges - payments
 
+    # def action_new_student(self):
+    #     """Open a new form for a student from Kanban view"""
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': 'New Student',
+    #         'res_model': 'student.master',
+    #         'view_mode': 'kanban',
+    #         'view_type': 'kanban',
+    #         'target': 'current',
+    #         'context': {
+    #             'default_state': 'draft',
+    #             'default_active': True,
+    #             'default_is_locked': False,
+    #             'default_company_id': self.env.company.id,
+    #         },
+    #     }
+    #

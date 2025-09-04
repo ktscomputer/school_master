@@ -14,9 +14,12 @@ class StudentLedger(models.Model):
     credit = fields.Float(string="Credit (Receipt)", readonly=True)
     balance = fields.Float(string="Running Balance", compute="_compute_balance", store=False)
 
+    # Add a related field to get the company logo
+    company_logo = fields.Binary(string='Company Logo', related='company_id.logo', readonly=True)
+    # Ensure company_id exists in the model
     company_id = fields.Many2one(
         'res.company', string='Company', default=lambda self: self.env.company, readonly=True)
-    company_logo = fields.Binary(string='Company Logo', related='company_id.logo', readonly=True)
+
 
     def init(self):
         self._cr.execute("""
@@ -69,6 +72,12 @@ class StudentLedgerWizard(models.TransientModel):
     date_from = fields.Date(string="From Date")
     date_to = fields.Date(string="To Date")
     result_html = fields.Html(string="Ledger", sanitize=False, readonly=True)
+
+    # Add a related field to get the company logo
+    company_logo = fields.Binary(string='Company Logo', related='company_id.logo', readonly=True)
+    # Ensure company_id exists in the model
+    company_id = fields.Many2one(
+        'res.company', string='Company', default=lambda self: self.env.company, readonly=True)
 
     def action_generate_ledger(self):
         """ Build HTML result and store in result_html """

@@ -12,6 +12,8 @@
                     <field name="exam_subject_id"/>
                     <field name="exam_total_mark"/>
                     <field name="obtained_mark"/>
+                    <field name="grade" readonly="is_locked"/>
+                    <field name="grade_point" readonly="is_locked"/>
                 </list>
             </field>
         </record>
@@ -22,12 +24,16 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="action_save" type="object" string="Save"
+                        <button name="action_save" type="object" string="Confirm"
                                 class="oe_highlight"
                                 invisible="is_locked"/>
-                        <button name="action_edit" type="object" string="Edit"
+                        <button name="action_edit" type="object" string="Reset to draft"
                                 invisible="not is_locked"/>
+                        <button name="action_new_result" string="New Result" type="object"
+                                class="btn-success"/>
+
                         <field name="is_locked" invisible="1"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                     </header>
                     <sheet>
                         <div class="row align-items-center py-3"
@@ -48,15 +54,13 @@
 
                             <!-- Right Side: Student Master Title -->
                             <div class="col-6 d-flex justify-content-end align-items-center">
-                                <!--                            <img src="/school_master/static/description/student.png"-->
-                                <!--                                 alt="Student Icon" class="me-2"-->
-                                <!--                                 style="width: 60px; height: 60px;"/>-->
+
                                 <h3 class="m-0 fw-bold text-primary" style="letter-spacing: 1px;">
                                     EXAM MASTER
                                 </h3>
                             </div>
                         </div>
-                        <div class="row" style="margin-top:10px;">
+                        <div class="row" style="margin-top:60px;">
                             <group>
                                 <field name="student_id" readonly="is_locked"/>
                                 <field name="exam_name_id" readonly="is_locked"/>

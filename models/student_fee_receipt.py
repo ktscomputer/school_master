@@ -158,6 +158,7 @@ class StudentFeeReceipt(models.Model):
 
 
 
+
 class FeeUpdateWizard(models.TransientModel):
     _name = 'fee.update.wizard'
     _description = 'Fee Update Wizard'
@@ -165,32 +166,63 @@ class FeeUpdateWizard(models.TransientModel):
     confirm = fields.Boolean(string="Confirm Fee Update?")
     can_execute = fields.Boolean(string="Can Execute", compute='_compute_can_execute', store=False)
 
-    def action_add_academic_fee_all(self):
-        academic_students = self.env['student.academic'].search([])
-        updated_count = 0
+    def action_generate_invoices(self):
+        """ Generate quarterly invoices for all students """
+        if not self.confirm:
+            return {'type': 'ir.actions.act_window_close'}
 
-        for academic in academic_students:
-            # Get the course fee from student.class.name based on the course
-            if academic.course:
-                course = self.env['student.class.name'].search([('name', '=', academic.course)], limit=1)
-                if course and course.quarter_fee > 0:
-                    academic.write({
-                        'total_fees_accumulated': academic.total_fees_accumulated + course.quarter_fee,
-                        'last_fee_addition': fields.Datetime.now(),
-                    })
-                    updated_count += 1
-                    _logger.info("Added fee %s for student %s (Course: %s)", course.quarter_fee, academic.name,
-                                 academic.course)
+        students = self.env['student.master'].search([])
+        invoice_count = 0
 
-        _logger.info("Academic fees updated for %s students", updated_count)
+        for student in students:
+            course = student.student_class_name
+            if course and course.quarter_fee > 0:
+                # Always use course fee as description
+                description = f"Quarterly Fee - {course.name}"
+
+                invoice_vals = {
+                    'student_id': student.id,
+                    'course_id': course.id,
+                    'year_id': student.student_class.id if student.student_class else False,
+                    'invoice_date': fields.Date.today(),
+                    'description': description,
+                    'amount': course.quarter_fee,
+                    'state': 'confirmed',
+                    'company_id': self.env.company.id,
+                }
+                self.env['student.fee.invoice'].create(invoice_vals)
+                invoice_count += 1
+
+                _logger.info(
+                    "Created invoice %.2f for student %s (Course: %s)",
+                    course.quarter_fee, student.student_name, course.name
+                )
+
+        # Save execution date for quarterly restriction
+        self.env['ir.config_parameter'].sudo().set_param(
+            'fee_update.last_execution', fields.Datetime.now()
+        )
+
+        _logger.info("Quarterly invoices generated: %s", invoice_count)
         return {'type': 'ir.actions.act_window_close'}
 
+    # @api.depends()
+    # def _compute_can_execute(self):
+    #     """ Allow execution only if 90+ days passed since last run """
+    #     last_execution = self.env['ir.config_parameter'].sudo().get_param('fee_update.last_execution')
+    #     if last_execution:
+    #         last_date = fields.Datetime.from_string(last_execution)
+    #         time_diff = (fields.Datetime.now() - last_date).days
+    #         self.can_execute = time_diff >= 90
+    #     else:
+    #         self.can_execute = True
     @api.depends()
     def _compute_can_execute(self):
-        last_execution = self.env['ir.config_parameter'].get_param('fee_update.last_execution')
+        """ Allow execution only if 5+ minutes passed since last run (for testing) """
+        last_execution = self.env['ir.config_parameter'].sudo().get_param('fee_update.last_execution')
         if last_execution:
             last_date = fields.Datetime.from_string(last_execution)
-            time_diff = (fields.Datetime.now() - last_date).days
-            self.can_execute = time_diff = 0  # 90 days = quarter
+            time_diff = (fields.Datetime.now() - last_date).total_seconds() / 60  # in minutes
+            self.can_execute = time_diff >= 5  # 5 minutes for testing
         else:
             self.can_execute = True

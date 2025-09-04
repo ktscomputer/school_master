@@ -11,7 +11,6 @@
                 <field name="year_id"/>
                 <field name="amount"/>
                 <field name="description"/>
-
             </list>
         </field>
     </record>
@@ -40,12 +39,12 @@
                         <!-- Right Side: Student Master Title -->
                         <div class="col-6 d-flex justify-content-end align-items-center">
                             <h3 class="m-0 fw-bold text-primary" style="letter-spacing: 1px;">
-                                Ledger Report
+                                Invoices
                             </h3>
                         </div>
                     </div>
 
-                    <div class="row" style="margin-top:20px;background-colour:grey;">
+                    <div class="row" style="margin-top:60px;">
                         <div class="col-6">
                             <group>
                                 <field name="student_id"/>

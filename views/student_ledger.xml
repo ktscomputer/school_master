@@ -4,34 +4,56 @@
         <field name="name">student.ledger.wizard.form</field>
         <field name="model">student.ledger.wizard</field>
         <field name="arch" type="xml">
-            <form string="Student Ledger">
+            <form string="Student Ledger" create="false" edit="true" class="student-ledger-wizard">
 
-                    <div class="row" style="border:1px solid black;padding:10px; margin:auto;">
-                        <div class="col-3">
-                            <group>
-                                <field name="student_id"/>
-                            </group>
+                <div class="row align-items-center py-3" style="min-height:100px; border-bottom: 2px solid #000;">
+                    <!-- Left Side: Company Logo & Name -->
+                    <div class="col-6 d-flex align-items-center">
+                        <div class="me-3">
+                            <field name="company_logo" widget="image" class="o_logo_company"
+                                   style="max-width: 80px; max-height: 80px; object-fit: contain;"
+                                   alt="Company Logo" readonly="1"/>
                         </div>
-                        <div class="col-3">
-                            <group>
-                                <field name="date_from"/>
-                            </group>
-                        </div>
-                        <div class="col-3">
-                            <group>
-                                <field name="date_to"/>
-                            </group>
-
-                        </div>
-                        <div class="col-3">
-                            <button name="action_generate_ledger" type="object" string="Generate"
-                                    class="btn-primary"/>
+                        <div>
+                            <h5 class="m-0 fw-bold text-dark">
+                                <field name="company_id"/>
+                            </h5>
                         </div>
                     </div>
-                     <separator string="Ledger Result"/>
-                    <div class="row">
-                        <field name="result_html" nolabel="1" readonly="1"/>
+
+                    <!-- Right Side: Student Master Title -->
+                    <div class="col-6 d-flex justify-content-end align-items-center">
+                        <h3 class="m-0 fw-bold text-primary" style="letter-spacing: 1px;">
+                            Student Ledger
+                        </h3>
                     </div>
+                </div>
+                <div class="row" style="margin-top:30px;">
+                    <div class="col-3">
+                        <group>
+                            <field name="student_id"/>
+                        </group>
+                    </div>
+                    <div class="col-3">
+                        <group>
+                            <field name="date_from"/>
+                        </group>
+                    </div>
+                    <div class="col-3">
+                        <group>
+                            <field name="date_to"/>
+                        </group>
+
+                    </div>
+                    <div class="col-3">
+                        <button name="action_generate_ledger" type="object" string="Generate"
+                                class="btn-primary"/>
+                    </div>
+                </div>
+                <separator string="Ledger Result"/>
+                <div class="row">
+                    <field name="result_html" nolabel="1" readonly="1"/>
+                </div>
 
 
             </form>
